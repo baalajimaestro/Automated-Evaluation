@@ -1,65 +1,55 @@
-# We're using Alpine stable
+# We're using Alpine Edge
 FROM alpine:edge
 
 #
 # We have to uncomment Community repo for some packages
 #
-RUN sed -e 's;^#http\(.*\)/v3.9/community;http\1/v3.9/community;g' -i /etc/apk/repositories
+RUN sed -e 's;^#http\(.*\)/edge/community;http\1/edge/community;g' -i /etc/apk/repositories
 
-# Installing Python
+# Installing Core Components
 RUN apk add --no-cache --update \
     git \
-    dash \
-    libffi-dev \
-    openssl-dev \
-    bzip2-dev \
-    zlib-dev \
-    readline-dev \
-    sqlite-dev \
-    build-base \
+    bash \
     python3 \
-    libxslt-dev \
-    libxml2 \
-    libxml2-dev \
-    py-pip \
+    py-pillow \
+    py-requests \
     libpq \
-    build-base \
-    linux-headers \
-    jpeg-dev \
     curl \
-    neofetch \
     sudo \
-    gcc \
-    python-dev \
-    python3-dev \
+    neofetch \
     musl \
-    sqlite \
-    figlet \
-    libwebp-dev \
-    chromium \
-    chromium-chromedriver
+    py-tz \
+    py3-aiohttp \
+    py-six \
+    py-click \
+    xvfb \
+    firefox \
+    geckodriver
 
-RUN pip3 install --upgrade pip setuptools
+RUN python3 -m ensurepip \
+    && pip3 install --upgrade pip setuptools \
+    && rm -r /usr/lib/python*/ensurepip && \
+    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
+    if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
+    rm -r /root/.cache
 
-# Copy Python Requirements to /app
+# Clone master by default
+#
+RUN git clone -b master https://github.com/baalajimaestro/Automated-Evaluation.git /root/userbot
 
-RUN  sed -e 's;^# \(%wheel.*NOPASSWD.*\);\1;g' -i /etc/sudoers
-RUN adduser bot --disabled-password --home /home/bot
-RUN adduser bot wheel
-USER bot
-RUN mkdir /home/bot/bot
-RUN git clone -b master https://github.com/baalajimaestro/Automated-Evaluation /home/userbot/bot
-WORKDIR /home/bot/bot
+WORKDIR /root/bot/
 
 #
-#Copies session and config(if it exists)
+# Copies session and config(if it exists)
 #
-
-COPY ./selenium-auto-eval.session /home/bot/bot/
+COPY ./selenium-eval.session /root/bot/
 
 #
-# Install requirements
+# Install dependencies
 #
+RUN pip3 install selenium xvfbwapper flask requests aiohttp telethon ujson
 
-RUN sudo pip3 install flask telethon selenium requests
-CMD ["python3","bot.py"]
+#
+# Finalization
+#
+CMD ["bash","start.sh"]

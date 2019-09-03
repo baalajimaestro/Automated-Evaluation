@@ -1,16 +1,10 @@
 # AUMS Evaluation Bot
 
-#### The bot that automates the tiring job of filling up faculty feedback!
+#### Here's the bad apple come!
 
-Built for the students of Amrita University.
+No more painful faculty feedback, the meme that exists without a reason!
+Pass the username and password to AUMS and the bot will do the rest, running with a selenium backend,
+automates whatever shit you do (press 5 star on all lecturers even when you sleep in their class)
 
-
-Services used on Python:
- - Telethon
- - Flask
- - Selenium
-
-Right now, it uses synchronous callback from flask to selenium, hence expect a response lag sometimes.
-
-Check out:
+Check it out:
 https://t.me/aums_eval_bot/

@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def respond():
-    creds = json.loads(request.json)
+    creds = json.loads(json.dumps(request.json))
     print(creds)
     uname=creds["uname"]
     passwd=creds["passwd"]

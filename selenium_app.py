@@ -7,30 +7,25 @@ def selenium_runner(input1, input2):
   from selenium import webdriver
   from selenium.webdriver.common.keys import Keys
   from selenium.webdriver.common.action_chains import ActionChains
-  from xvfbwrapper import Xvfb
-  vdisplay = Xvfb()
-  vdisplay.start()
   import time
   import sys
   try:
-    from selenium.webdriver.firefox.options import Options
-    options = Options()
-    options.headless = True
-    driver = webdriver.Firefox(options=options)
+    driver = webdriver.PhantomJS()
     driver.get('https://amritavidya.amrita.edu:8444/cas/login?service=https%3A%2F%2Famritavidya.amrita.edu%3A8444%2Faums%2FJsp%2FCore_Common%2Findex.jsp%3Ftask%3Doff')
 
     time.sleep(2)
 
-    username = driver.find_element_by_id('username')
-    username.send_keys(input1)
+    # Amrita is known for running gay redirects into amritavidya1 and amritavidya2
+    # Lets loop on and on till we can login xd
 
-    password = driver.find_element_by_id('password')
-    password.send_keys(input2)
-    time.sleep(2)
-    subbut = driver.find_element_by_name('submit')
-    subbut.click()
-
-    time.sleep(2)
+    while driver.current_url in ['https://amritavidya.amrita.edu:8444/cas/login?service=https%3A%2F%2Famritavidya.amrita.edu%3A8444%2Faums%2FJsp%2FCore_Common%2Findex.jsp%3Ftask%3Doff','https://amritavidya1.amrita.edu:8444/cas/login?service=https%3A%2F%2Famritavidya1.amrita.edu%3A8444%2Faums%2FJsp%2FCore_Common%2Findex.jsp%3Ftask%3Doff','https://amritavidya2.amrita.edu:8444/cas/login?service=https%3A%2F%2Famritavidya2.amrita.edu%3A8444%2Faums%2FJsp%2FCore_Common%2Findex.jsp%3Ftask%3Doff']:
+            time.sleep(2)
+            username = driver.find_element_by_id('username')
+            username.send_keys(input1)
+            password = driver.find_element_by_id('password')
+            password.send_keys(input2)
+            subbut = driver.find_element_by_name('submit')
+            subbut.click()
 
     iframe = driver.find_element_by_xpath("//iframe[@name='maincontentframe']")
     driver.switch_to.frame(iframe)
@@ -63,13 +58,11 @@ def selenium_runner(input1, input2):
             time.sleep(2)
         except:
             break
-    vdisplay.stop()
     display.quit()
     driver.close()
     return True
   except:
       try:
-        vdisplay.stop()
         display.quit()
         driver.close()
       finally:

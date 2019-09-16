@@ -12,8 +12,9 @@ import ujson
 import aiohttp
 import os
 
-APP_ID=os.environ.get("API_KEY",None)
-APP_HASH=os.environ.get("API_HASH",None)
+APP_ID=os.environ.get(APP_ID,None)
+APP_HASH=os.environ.get(APP_HASH,None)
+
 basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     level=INFO,
@@ -37,6 +38,7 @@ async def evaluate(eval):
                         await msg.edit("Naniiiiii? Password Incorrect?")
                     else:
                         await msg.edit("Desu! Faculty Feedback Completed!")
+                        
 @bot.on(events.NewMessage(pattern="/start",incoming=True))
 async def start(tr):
     await tr.respond("Onii-Chaan! Just gimme your AUMS username and password `/eval` in the format `/eval <username> <password>`\nI can assure I don't log your passwords ~nya")
